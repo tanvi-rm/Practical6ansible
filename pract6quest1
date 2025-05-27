@@ -1,0 +1,25 @@
+
+
+wsl -l -v
+wsl -d ________
+cd ..
+cd home
+ls -l
+sudo mkdir -p /home/PractExam
+cd _______
+sudo vi _______
+cat _____________
+ansible-playbook __________
+
+
+vi code:
+---
+- name: Practical No06 Anisible
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: print hello world
+      debug:
+        msg: "Hello Tanvi"
+
+
