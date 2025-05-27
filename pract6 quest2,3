@@ -1,0 +1,59 @@
+2. Create a simple playbook to print "Hello World" using the pull model.
+kunal@Kunalsk36-Laptop:/$ cd home/practice1
+kunal@Kunalsk36-Laptop:/home/practice1$ ls
+kunal@Kunalsk36-Laptop:/home/practice1$ sudo vi practice.yml
+[sudo] password for kunal:
+kunal@Kunalsk36-Laptop:/home/practice1$ cat practice.yml
+---
+- name: Practice
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: print hello world
+      debug:
+        msg: "hello world"
+kunal@Kunalsk36-Laptop:/home/practice1$ ansible-playbook practice.yml
+
+
+3. Deploy a NodeJS web application with a basic welcome message using the pull mode.
+36-Laptop:/home/practice1$ sudo vi node.yml
+36-Laptop:/home/practice1$ cat node.yml
+---
+- name: Node.js deploy
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Node.js and npm
+      apt:
+        name:
+          - nodejs
+          - npm
+        state: present
+        update_cache: yes
+
+    - name: Create app directory
+      file:
+        path: /opt/nodeapp
+        state: directory
+        mode: '0755'
+
+    - name: Create app.js with welcome message
+      copy:
+        dest: /opt/nodeapp/app.js
+        content: |
+          const http = require('http');
+          const port = 3000;
+          const server = http.cerateServer((req,res)=>{
+            res.statusCode=200;
+            res.setHeader('Content-Type', 'text/plain');
+            res.end('Hello from Ansible-deployed node.js app!');
+          });
+          server.listen(port, () => {
+            console.log(`server running at http://localhost:${port}`);
+          });
+
+    - name: Start Node.js App in background
+      shell: nohup node app.js &
+      args:
+        chdir: /opt/nodeapp
+36-Laptop:/home/practice1$ sudo ansible-playbook node.yml
